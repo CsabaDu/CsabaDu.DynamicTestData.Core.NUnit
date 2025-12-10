@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="NUnitLite" Version="4.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CsabaDu.DynamicTestData.Core\CsabaDu.DynamicTestData.Core.csproj" />
+  </ItemGroup>
+
 </Project>
