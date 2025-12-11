@@ -28,33 +28,24 @@ public static class Extensions
         var displayName = GetDisplayName(
             testMethodName,
             testCaseName);
-        var testDataType = typeof(TTestData);
         var testCaseData = new TestCaseData(convertedTestData)
             .SetDescription(testCaseName)
             .SetName(displayName);
         var returns = testData as IReturns;
         bool isReturns = returns is not null;
+        var testDataType = GetTestDataType(
+            testData,
+            isReturns,
+            out Type[] genericArgs);
         testCaseData.TypeArgs = argsCode switch
         {
             ArgsCode.Instance => [testDataType],
-            ArgsCode.Properties => getGenericArgs(),
+            ArgsCode.Properties => genericArgs,
             _ => null,
         };
 
         return isReturns ?
             testCaseData.Returns(returns!.GetExpected())
             : testCaseData;
-
-        #region Local methods
-        Type[] getGenericArgs()
-        {
-            var genericArgs =
-                testDataType.GetGenericArguments();
-
-            return isReturns ?
-                genericArgs[1..]
-                : genericArgs;
-        }
-        #endregion
     }
 }

@@ -42,6 +42,23 @@ public abstract class TestCaseTestData
             ExpectedResult = returns.GetExpected();
         }
     }
+
+
+    public static Type GetTestDataType<TTestData>(
+        TTestData testData,
+        bool isResult,
+        out Type[] genericArgs)
+    where TTestData : notnull, ITestData
+    {
+        Type testDataType = typeof(TTestData);
+        genericArgs = testDataType.GetGenericArguments();
+
+        genericArgs = isResult ?
+            genericArgs[1..]
+            : genericArgs;
+
+        return testDataType;
+    }
 }
 
 /// <summary>
@@ -64,25 +81,16 @@ where TTestData : notnull, ITestData
         argsCode,
         testMethodName)
     {
-        Type testDataType = typeof(TTestData);
+        Type testDataType = GetTestDataType(
+            testData,
+            HasExpectedResult,
+            out Type[] genericArgs);
 
         TypeArgs = argsCode switch
         {
             ArgsCode.Instance => [testDataType],
-            ArgsCode.Properties => getGenericArgs(),
+            ArgsCode.Properties => genericArgs,
             _ => null,
         };
-
-        #region Local methods
-        Type[] getGenericArgs()
-        {
-            var genericArgs =
-                testDataType.GetGenericArguments();
-
-            return HasExpectedResult ?
-                genericArgs[1..]
-                : genericArgs;
-        }
-        #endregion
     }
 }
