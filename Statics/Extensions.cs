@@ -33,8 +33,7 @@ public static class Extensions
             .SetName(displayName);
         var returns = testData as IReturns;
         bool isReturns = returns is not null;
-        var testDataType = GetTestDataType(
-            testData,
+        var testDataType = GetTestDataType<TTestData>(
             isReturns,
             out Type[] genericArgs);
         testCaseData.TypeArgs = argsCode switch

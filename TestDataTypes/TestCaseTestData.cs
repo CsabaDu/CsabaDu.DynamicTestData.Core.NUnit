@@ -43,17 +43,16 @@ public abstract class TestCaseTestData
         }
     }
 
-
+    
     public static Type GetTestDataType<TTestData>(
-        TTestData testData,
-        bool isResult,
+        bool isReturns,
         out Type[] genericArgs)
     where TTestData : notnull, ITestData
     {
         Type testDataType = typeof(TTestData);
         genericArgs = testDataType.GetGenericArguments();
 
-        genericArgs = isResult ?
+        genericArgs = isReturns ?
             genericArgs[1..]
             : genericArgs;
 
@@ -81,8 +80,7 @@ where TTestData : notnull, ITestData
         argsCode,
         testMethodName)
     {
-        Type testDataType = GetTestDataType(
-            testData,
+        Type testDataType = GetTestDataType<TTestData>(
             HasExpectedResult,
             out Type[] genericArgs);
 
