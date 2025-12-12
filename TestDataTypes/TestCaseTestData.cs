@@ -43,7 +43,6 @@ public abstract class TestCaseTestData
         }
     }
 
-    
     public static Type GetTestDataType<TTestData>(
         bool isReturns,
         out Type[] genericArgs)
