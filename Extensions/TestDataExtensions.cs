@@ -4,7 +4,7 @@
 using CsabaDu.DynamicTestData.Core.NUnit.TestDataTypes;
 using static CsabaDu.DynamicTestData.Core.NUnit.TestDataTypes.TestCaseTestData;
 
-namespace CsabaDu.DynamicTestData.Core.NUnit.Statics;
+namespace CsabaDu.DynamicTestData.Core.NUnit.Extensions;
 
 public static class TestDataExtensions
 {
