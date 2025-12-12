@@ -1,9 +1,12 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025. Csaba Dudas (CsabaDu)
 
+using CsabaDu.DynamicTestData.Core.NUnit.TestDataTypes;
+using static CsabaDu.DynamicTestData.Core.NUnit.TestDataTypes.TestCaseTestData;
+
 namespace CsabaDu.DynamicTestData.Core.NUnit.Statics;
 
-public static class Extensions
+public static class TestDataExtensions
 {
     public static TestCaseTestData<TTestData> ToTestCaseTestData<TTestData>(
         this TTestData testData,
@@ -25,7 +28,7 @@ public static class Extensions
             argsCode,
             PropsCode.Returns,
             out string testCaseName);
-        var displayName = GetDisplayName(
+        var displayName = CreateDisplayName(
             testMethodName,
             testCaseName);
         var testCaseData = new TestCaseData(convertedTestData)

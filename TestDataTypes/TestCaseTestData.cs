@@ -34,7 +34,7 @@ public abstract class TestCaseTestData
 
         if (!string.IsNullOrEmpty(testMethodName))
         {
-            TestName = GetDisplayName(testMethodName, testCaseName);
+            TestName = CreateDisplayName(testMethodName, testCaseName);
         }
 
         if (testData is IReturns returns)
