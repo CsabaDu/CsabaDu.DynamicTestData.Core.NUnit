@@ -2,6 +2,7 @@
 // Copyright (c) 2025. Csaba Dudas (CsabaDu)
 
 using CsabaDu.DynamicTestData.Core.NUnit.TestDataTypes;
+using System.Diagnostics.CodeAnalysis;
 using static CsabaDu.DynamicTestData.Core.NUnit.TestDataTypes.TestCaseTestData;
 
 namespace CsabaDu.DynamicTestData.Core.NUnit.Extensions;
@@ -24,18 +25,17 @@ public static class TestDataExtensions
         string? testMethodName)
     where TTestData : notnull, ITestData
     {
-        var convertedTestData = testData.ToParams(
+        var row = testData.ToParams(
             argsCode,
             PropsCode.Returns,
             out string testCaseName);
         var displayName = CreateDisplayName(
             testMethodName,
             testCaseName);
-        var testCaseData = new TestCaseData(convertedTestData)
+        var testCaseData = new TestCaseData(row)
             .SetDescription(testCaseName)
             .SetName(displayName);
-        var returns = testData as IReturns;
-        bool isReturns = returns is not null;
+        var isReturns = IsReturns(testData, out IReturns? returns);
         var testDataType = GetTestDataType<TTestData>(
             isReturns,
             out Type[] genericArgs);

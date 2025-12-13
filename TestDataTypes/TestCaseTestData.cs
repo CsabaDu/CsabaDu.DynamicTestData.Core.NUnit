@@ -1,6 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025. Csaba Dudas (CsabaDu)
 
+
 namespace CsabaDu.DynamicTestData.Core.NUnit.TestDataTypes;
 
 /// <summary>
@@ -37,10 +38,18 @@ public abstract class TestCaseTestData
             TestName = CreateDisplayName(testMethodName, testCaseName);
         }
 
-        if (testData is IReturns returns)
+        if (IsReturns(testData, out IReturns ? returns))
         {
             ExpectedResult = returns.GetExpected();
         }
+    }
+
+    public static bool IsReturns(
+        ITestData testData,
+        [NotNullWhen(true)] out IReturns? returns)
+    {
+        returns = testData as IReturns;
+        return returns is not null;
     }
 
     public static Type GetTestDataType<TTestData>(
