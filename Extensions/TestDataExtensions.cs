@@ -2,7 +2,6 @@
 // Copyright (c) 2025. Csaba Dudas (CsabaDu)
 
 using CsabaDu.DynamicTestData.Core.NUnit.TestDataTypes;
-using System.Diagnostics.CodeAnalysis;
 using static CsabaDu.DynamicTestData.Core.NUnit.TestDataTypes.TestCaseTestData;
 
 namespace CsabaDu.DynamicTestData.Core.NUnit.Extensions;
@@ -35,7 +34,9 @@ public static class TestDataExtensions
         var testCaseData = new TestCaseData(row)
             .SetDescription(testCaseName)
             .SetName(displayName);
-        var isReturns = IsReturns(testData, out IReturns? returns);
+        var isReturns = IsReturns(
+            testData,
+            out IReturns? returns);
         var testDataType = GetTestDataType<TTestData>(
             isReturns,
             out Type[] genericArgs);
