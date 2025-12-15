@@ -24,16 +24,23 @@ public static class TestDataExtensions
         string? testMethodName)
     where TTestData : notnull, ITestData
     {
-        var row = testData.ToParams(
+        var row = testData?.ToParams(
             argsCode,
             PropsCode.Returns,
-            out string testCaseName);
-        var displayName = CreateDisplayName(
-            testMethodName,
-            testCaseName);
+            out string testCaseName)
+            ?? throw new ArgumentNullException(nameof(testData));
         var testCaseData = new TestCaseData(row)
-            .SetDescription(testCaseName)
-            .SetName(displayName);
+            .SetDescription(testCaseName);
+
+        if (!string.IsNullOrEmpty(testMethodName))
+        {
+            var displayName = CreateDisplayName(
+                testMethodName,
+                testCaseName);
+
+            testCaseData.SetName(displayName);
+        }
+
         var isReturns = IsReturns(
             testData,
             out IReturns? returns);
