@@ -1,12 +1,11 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025. Csaba Dudas (CsabaDu)
 
-using CsabaDu.DynamicTestData.Core.NUnit.TestDataTypes;
 using static CsabaDu.DynamicTestData.Core.NUnit.TestDataTypes.TestCaseTestData;
 
-namespace CsabaDu.DynamicTestData.Core.NUnit.Extensions;
+namespace CsabaDu.DynamicTestData.Core.NUnit.TestDataTypes.Converters;
 
-public static class TestDataExtensions
+public static class TestDataConverter
 {
     public static TestCaseTestData<TTestData> ToTestCaseTestData<TTestData>(
         this TTestData testData,
