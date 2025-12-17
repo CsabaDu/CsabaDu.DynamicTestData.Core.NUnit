@@ -10,24 +10,18 @@ public static class CollectionConverter
         ArgsCode argsCode,
         string? testMethodName = null)
     where TTestData : notnull, ITestData
-    {
-        return testDataCollection.Convert(
-            TestDataConverter.ToTestCaseData,
-            nameof(TestDataConverter.ToTestCaseData),
-            argsCode,
-            testMethodName);
-    }
+    => testDataCollection.Convert(
+        TestDataConverter.ToTestCaseData,
+        argsCode,
+        testMethodName);
 
     public static IEnumerable<TestCaseTestData<TTestData>> ToTestCaseTestDataCollection<TTestData>(
         this IEnumerable<TTestData> testDataCollection,
         ArgsCode argsCode,
         string? testMethodName = null)
     where TTestData : notnull, ITestData
-    {
-        return testDataCollection.Convert(
-            TestDataConverter.ToTestCaseTestData,
-            nameof(TestDataConverter.ToTestCaseTestData),
-            argsCode,
-            testMethodName);
-    }
+    => testDataCollection.Convert(
+        TestDataConverter.ToTestCaseTestData,
+        argsCode,
+        testMethodName);
 }
