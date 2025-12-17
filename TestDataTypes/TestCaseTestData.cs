@@ -1,7 +1,6 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025. Csaba Dudas (CsabaDu)
 
-
 namespace CsabaDu.DynamicTestData.Core.NUnit.TestDataTypes;
 
 /// <summary>
@@ -11,61 +10,16 @@ namespace CsabaDu.DynamicTestData.Core.NUnit.TestDataTypes;
 public abstract class TestCaseTestData
 : TestCaseData
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TestCaseTestData"/> class.
-    /// <remark>
-    /// The constructor sets the <see cref="TestParameters.Arguments"/> property.
-    /// and the value of the <see cref="TestParameters.Description"/> key
-    /// of the <see cref="TestParameters.Properties"/> dictionary.
-    /// </remark>
-    /// </summary>
-    /// <param name="testData">The <see cref="TestData"/> instance having the necessary test parameters.</param>
-    /// <param name="argsCode">The <see cref="ArgsCode"/> enum to determine the conversion method.</param>
-    /// <param name="testMethodName">The name of the test method which proceeds the TestCaseData.</param>
-    private protected TestCaseTestData(
+    private protected TestCaseTestData(object?[] args)
+    : base(args)
+    {
+    }
+
+    public static object?[] ConvertToReturnsParams(
         ITestData testData,
-        ArgsCode argsCode,
-        string? testMethodName)
-    : base(testData.ToParams(
-        argsCode,
-        PropsCode.Returns,
-        out string testCaseName))
-    {
-        Properties.Set(PropertyNames.Description, testCaseName);
+        ArgsCode argsCode)
+    => testData.ToParams(argsCode, PropsCode.Returns);
 
-        if (!string.IsNullOrEmpty(testMethodName))
-        {
-            TestName = CreateDisplayName(testMethodName, testCaseName);
-        }
-
-        if (IsReturns(testData, out IReturns ? returns))
-        {
-            ExpectedResult = returns.GetExpected();
-        }
-    }
-
-    public static bool IsReturns(
-        ITestData testData,
-        [NotNullWhen(true)] out IReturns? returns)
-    {
-        returns = testData as IReturns;
-        return returns is not null;
-    }
-
-    public static Type GetTestDataType<TTestData>(
-        bool isReturns,
-        out Type[] genericArgs)
-    where TTestData : notnull, ITestData
-    {
-        Type testDataType = typeof(TTestData);
-        genericArgs = testDataType.GetGenericArguments();
-
-        genericArgs = isReturns ?
-            genericArgs[1..]
-            : genericArgs;
-
-        return testDataType;
-    }
 }
 
 /// <summary>
@@ -83,20 +37,20 @@ where TTestData : notnull, ITestData
         TTestData testData,
         ArgsCode argsCode,
         string? testMethodName)
-    : base(
-        testData,
-        argsCode,
-        testMethodName)
+    : base(ConvertToReturnsParams(testData, argsCode))
     {
-        Type testDataType = GetTestDataType<TTestData>(
-            HasExpectedResult,
-            out Type[] genericArgs);
+        Properties.Set(PropertyNames.Description, testData.TestCaseName);
 
-        TypeArgs = argsCode switch
+        if (!string.IsNullOrEmpty(testMethodName))
         {
-            ArgsCode.Instance => [testDataType],
-            ArgsCode.Properties => genericArgs,
-            _ => null,
-        };
+            TestName = testData.GetDisplayName(testMethodName);
+        }
+
+        if (testData is IReturns returns)
+        {
+            ExpectedResult = returns.GetExpected();
+        }
+        
+        TypeArgs = testData.GetTypeArgs(argsCode);
     }
 }
