@@ -19,7 +19,6 @@ public abstract class TestCaseTestData
         ITestData testData,
         ArgsCode argsCode)
     => testData.ToParams(argsCode, PropsCode.Returns);
-
 }
 
 /// <summary>
