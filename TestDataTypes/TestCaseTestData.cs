@@ -1,6 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025. Csaba Dudas (CsabaDu)
 
+
 namespace CsabaDu.DynamicTestData.Core.NUnit.TestDataTypes;
 
 /// <summary>
@@ -29,7 +30,7 @@ public abstract class TestCaseTestData
 /// code.</remarks>
 /// <typeparam name="TTestData">The type of the test data, which must implement <see cref="ITestData"/>.</typeparam>
 public sealed class TestCaseTestData<TTestData>
-: TestCaseTestData
+: TestCaseTestData, INamedTestCase
 where TTestData : notnull, ITestData
 {
     public TestCaseTestData(
@@ -38,18 +39,35 @@ where TTestData : notnull, ITestData
         string? testMethodName)
     : base(ConvertToReturnsParams(testData, argsCode))
     {
-        Properties.Set(PropertyNames.Description, testData.TestCaseName);
+        TestCaseName = testData.TestCaseName;
+        TypeArgs = testData.GetTypeArgs(argsCode);
+        Properties.Set(PropertyNames.Description, TestCaseName);
 
         if (!string.IsNullOrEmpty(testMethodName))
         {
-            TestName = testData.GetDisplayName(testMethodName);
+            TestName = GetDisplayName(testMethodName);
         }
 
         if (testData is IReturns returns)
         {
             ExpectedResult = returns.GetExpected();
         }
-        
-        TypeArgs = testData.GetTypeArgs(argsCode);
     }
+
+    public string TestCaseName { get; init; }
+
+    public bool ContainedBy(IEnumerable<INamedTestCase>? namedTestCases)
+    => namedTestCases?.Any(Equals) == true;
+
+    public override bool Equals(object? obj)
+    => Equals(obj as INamedTestCase);
+
+    public bool Equals(INamedTestCase? other)
+    => TestCaseName == other?.TestCaseName;
+
+    public string? GetDisplayName(string? testMethodName)
+    => CreateDisplayName(testMethodName, TestCaseName);
+
+    public override int GetHashCode()
+    => TestCaseName.GetHashCode();
 }
