@@ -1,7 +1,6 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025. Csaba Dudas (CsabaDu)
 
-
 namespace CsabaDu.DynamicTestData.Core.NUnit.TestDataTypes;
 
 /// <summary>
@@ -15,6 +14,24 @@ public abstract class TestCaseTestData
     : base(args)
     {
     }
+
+    public static Type[]? GetTypeArgs<TTestData>(
+        TTestData testData,
+        ArgsCode argsCode)
+    where TTestData : notnull, ITestData
+    {
+        var testDataType = typeof(TTestData);
+        var typeArgs = testDataType.GetGenericArguments();
+
+        typeArgs = testData is IReturns ?
+            typeArgs[1..]
+            : typeArgs;
+
+        return argsCode == ArgsCode.Properties ?
+            typeArgs
+            : null;
+    }
+
 
     public static object?[] ConvertToReturnsParams(
         ITestData testData,
@@ -40,7 +57,7 @@ where TTestData : notnull, ITestData
     : base(ConvertToReturnsParams(testData, argsCode))
     {
         TestCaseName = testData.TestCaseName;
-        TypeArgs = testData.GetTypeArgs(argsCode);
+        TypeArgs = GetTypeArgs(testData, argsCode);
         Properties.Set(PropertyNames.Description, TestCaseName);
 
         if (!string.IsNullOrEmpty(testMethodName))
@@ -66,7 +83,7 @@ where TTestData : notnull, ITestData
     => TestCaseName == other?.TestCaseName;
 
     public string? GetDisplayName(string? testMethodName)
-    => CreateDisplayName(testMethodName, TestCaseName);
+    => NamedTestCase.CreateDisplayName(testMethodName, TestCaseName);
 
     public override int GetHashCode()
     => TestCaseName.GetHashCode();

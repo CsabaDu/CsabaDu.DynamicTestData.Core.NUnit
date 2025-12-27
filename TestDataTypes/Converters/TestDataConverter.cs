@@ -23,7 +23,7 @@ public static class TestDataConverter
         var row = ConvertToReturnsParams(testData, argsCode);
         var testCaseData = new TestCaseData(row)
         {
-            TypeArgs = testData.GetTypeArgs(argsCode),
+            TypeArgs = GetTypeArgs(testData, argsCode),
         }
         .SetDescription(testData.TestCaseName);
 
