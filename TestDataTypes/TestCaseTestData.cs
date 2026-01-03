@@ -32,7 +32,6 @@ public abstract class TestCaseTestData
             : null;
     }
 
-
     public static object?[] ConvertToReturnsParams(
         ITestData testData,
         ArgsCode argsCode)
